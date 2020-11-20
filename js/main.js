@@ -1,25 +1,56 @@
-import gallery from'./galeriItem.js';
+import galleryItems from "./galleryItem.js";
 
-console.log(gallery);
+const galleryContainer = document.querySelector(".js-gallery");
 
-// Создание и рендер разметки по массиву данных и предоставленному шаблону.
+galleryContainer.insertAdjacentHTML("beforeend", createGalleryMarkup(galleryItems));
 
-// Реализация делегирования на галерее ul.js-gallery 
-// и получение url большого изображения.
+galleryContainer.addEventListener("click", openModal);
 
-// Открытие модального окна по клику на элементе галереи.
+function createGalleryMarkup(galleryItems) {
+  return galleryItems
+    .map(({ original, preview, description }) => {
+      return `
+      <li class="gallery__item">
+        <a
+          class="gallery__link"
+          href="${original}"
+        >
+          <img
+            class="gallery__image"
+            src="${preview}"
+            data-source="${original}"
+            alt="${description}"
+          />
+        </a>
+      </li>
+        `;
+    })
+    .join('');
+}
 
-// Подмена значения атрибута src элемента img.lightbox__image.
+const modalButton = document.querySelector(".lightbox__button");
+modalButton.addEventListener("click", closeModal);
 
-// Закрытие модального окна по клику на кнопку button[data-action="close-lightbox"].
 
-// Очистка значения атрибута src элемента img.lightbox__image.
+const modalOpenEvent = document.querySelector(".js-lightbox");
+const modalImage = document.querySelector(".lightbox__image");
 
-// Это необходимо для того, чтобы при следующем открытии модального окна, 
-// пока грузится изображение, мы не видели предыдущее.
 
-// Закрытие модального окна по клику на div.lightbox__overlay.
+function openModal(event) {
+  event.preventDefault();
+  if (event.target.nodeName !== "IMG") {
+    return;
+  }
+  document.addEventListener("keydown", closeModal);
 
-// Закрытие модального окна по нажатию клавиши ESC.
+  modalOpenEvent.classList.add("is-open");
+  modalImage.src = event.target.dataset.source;
+  modalImage.alt = event.target.alt;
+}
 
-// Пролистывание изображений галереи в открытом модальном окне клавишами "влево" и "вправо".
+function closeModal(event) {
+  event.preventDefault();
+  document.removeEventListener("keydown", closeModal);
+  modalOpenEvent.classList.remove("is-open");
+  modalImage.src = "";
+}
