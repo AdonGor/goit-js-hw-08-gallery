@@ -10,7 +10,7 @@ const closeModalBtn = document.querySelector('button[data-action="close-lightbox
 let activeIndex;
 // создание items для списка galleryItems:
 const itemList = ({original, preview, description},index) => `<li class="gallery__item"><a class ="gallery__link"><img class="gallery__image" src ="${preview}" data-source="${original}" data-index="${index}" alt ="${description}"></li>`;
-const galleryMarkup = galleryItems.reduce((acc, item) => acc + itemList(item), "");
+const galleryMarkup = galleryItems.reduce((acc, item, index) => acc + itemList(item,index), "");
 galleryItemList.insertAdjacentHTML("afterbegin", galleryMarkup);
 // действия при клике на изображение:
 galleryItemList.addEventListener('click', (event) => {
